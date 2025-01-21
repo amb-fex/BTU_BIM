@@ -5,7 +5,8 @@ import os
 app = Flask(__name__)
 
 # URL de conexión externo de Render
-DATABASE_URL = "postgresql://btu_bim_user:yOs3ITKc3EKTKbF3Yx0gaOypi5g5HvI4@dpg-cu72o123esus73ffd48g-a.frankfurt-postgres.render.com/btu_bim"
+DATABASE_URL = "postgresql://btu_bim_user:yOs3ITKc3EKTKbF3Yx0gaOypi5g5HvI4@dpg-cu72o123esus73ffd48g-a/btu_bim"
+
 
 # Conexión a la base de datos
 try:
