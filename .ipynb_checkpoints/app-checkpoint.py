@@ -2,6 +2,7 @@ import psycopg2
 from flask import Flask, request, jsonify, render_template
 import os
 import base64
+import json  # Asegurarse de importar json
 
 app = Flask(__name__)
 
@@ -43,18 +44,19 @@ def submit_data():
         geometria = data["geometria"]
         terreno = data["terreno"]  # Mantenerlo como lista para TEXT[]
         captacion = data["captacion"]
-        fotografias = base64.b64decode(data["fotografias"])  # Convertir Base64 a bytes
+        fotografias = base64.b64decode(data["fotografias"]) if data["fotografias"] else None  # Convertir Base64 a bytes
         observaciones = data["observaciones"]
+
+        # Convertir `terreno` a JSON (si es una lista)
+        terreno_json = json.dumps(terreno)
 
         # Usar la conexión global para insertar datos
         cur = conn.cursor()
-
-        # Insertar datos en la tabla
         cur.execute("""
             INSERT INTO datos_btu_bim 
             (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (categoria, elemento, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones))
+        """, (categoria, elemento, descripcion, tipo, geometria, terreno_json, captacion, fotografias, observaciones))
         conn.commit()
 
         cur.close()
