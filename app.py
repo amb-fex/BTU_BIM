@@ -41,5 +41,18 @@ def submit_data():
         # Insertar datos en la tabla
         cur.execute("""
             INSERT INTO datos_btu_bim 
+            (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (categoria, elemento, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones))
+        conn.commit()
+
+        cur.close()
+        return jsonify({"message": "Datos guardados con éxito"}), 200
+    except Exception as e:
+        print(f"Error al guardar los datos: {e}")
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
   
 
