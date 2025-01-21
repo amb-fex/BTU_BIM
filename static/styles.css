@@ -11,21 +11,24 @@ body {
 /* Banner Superior */
 .banner {
     background-color: #ffcf00; /* Color del banner */
-    padding: 10px 20px;
+    padding: 30px 20px; /* Incrementamos el padding para hacerla más alta */
     display: flex;
     align-items: center; /* Centrar verticalmente los elementos */
     justify-content: flex-start; /* Alinear los elementos a la izquierda */
     position: relative; /* Asegurarse de que se quede en su posición */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para realce */
+    height: auto; /* Ajustar la altura automáticamente */
 }
+
 
 .banner img {
-    height: 40px; /* Tamaño ajustado del logotipo */
-    margin-right: 15px; /* Espacio entre el logotipo y el texto */
+    height: 80px; /* Incrementamos el tamaño del logotipo */
+    margin-right: 35px; /* Espacio entre el logotipo y el texto */
 }
 
+
 .banner span {
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
     color: #000;
 }
