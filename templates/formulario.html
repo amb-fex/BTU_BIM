@@ -10,7 +10,7 @@
     <div class="container">
         <h1>Formulario BTU-BIM</h1>
         <form id="data-form">
-            <!-- Nueva pregunta: Modo -->
+            <!-- Pregunta: Modo -->
             <div class="form-group">
                 <label for="modo">¿Qué desea hacer?</label>
                 <select id="modo" name="modo" required>
@@ -19,22 +19,38 @@
                 </select>
             </div>
 
+            <!-- Menú desplegable para Categoría -->
             <div class="form-group">
                 <label for="categoria">Categoría:</label>
-                <input type="text" id="categoria" name="categoria" maxlength="20" required>
+                <select id="categoria" name="categoria" required>
+                    <option value="Mapa Base">Mapa Base</option>
+                    <option value="Curvas de Nivel">Curvas de Nivel</option>
+                    <option value="Límites Administrativos">Límites Administrativos</option>
+                    <option value="Red Hidrográfica">Red Hidrográfica</option>
+                    <option value="Red Vial">Red Vial</option>
+                    <option value="Edificaciones">Edificaciones</option>
+                    <option value="Uso del Suelo">Uso del Suelo</option>
+                    <option value="Cobertura Vegetal">Cobertura Vegetal</option>
+                    <option value="Infraestructura de Servicios">Infraestructura de Servicios</option>
+                    <option value="Puntos de Interés">Puntos de Interés</option>
+                </select>
             </div>
+
             <div class="form-group">
                 <label for="elemento">Elemento u Objeto:</label>
                 <input type="text" id="elemento" name="elemento" maxlength="50" required>
             </div>
+
             <div class="form-group">
                 <label for="descripcion">Descripción:</label>
                 <textarea id="descripcion" name="descripcion" maxlength="200"></textarea>
             </div>
+
             <div class="form-group">
                 <label for="tipo">Tipo:</label>
                 <input type="text" id="tipo" name="tipo" maxlength="5" required>
             </div>
+
             <div class="form-group">
                 <label for="geometria">Geometría:</label>
                 <select id="geometria" name="geometria" required>
@@ -43,25 +59,46 @@
                     <option value="polígono">Polígono</option>
                 </select>
             </div>
+
+            <!-- Checklist para Terreno -->
             <div class="form-group">
-                <label for="terreno">Terreno:</label>
-                <select id="terreno" name="terreno" multiple>
-                    <option value="terreno">Terreno</option>
-                    <option value="sobresale">Sobresale</option>
-                    <option value="sobre construccion">Sobre Construcción</option>
-                    <option value="elevado">Elevado</option>
-                    <option value="en tunel">En Túnel</option>
-                    <option value="bajo tierra">Bajo Tierra</option>
-                </select>
+                <label for="terreno">Terreno (seleccione todas las que correspondan):</label>
+                <div>
+                    <input type="checkbox" id="terreno1" name="terreno" value="Terreno">
+                    <label for="terreno1">Terreno</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terreno2" name="terreno" value="Sobresale">
+                    <label for="terreno2">Sobresale</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terreno3" name="terreno" value="Sobre Construcción">
+                    <label for="terreno3">Sobre Construcción</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terreno4" name="terreno" value="Elevado">
+                    <label for="terreno4">Elevado</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terreno5" name="terreno" value="En Túnel">
+                    <label for="terreno5">En Túnel</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="terreno6" name="terreno" value="Bajo Tierra">
+                    <label for="terreno6">Bajo Tierra</label>
+                </div>
             </div>
+
             <div class="form-group">
                 <label for="captacion">Captación:</label>
                 <textarea id="captacion" name="captacion" maxlength="500"></textarea>
             </div>
+
             <div class="form-group">
                 <label for="observaciones">Observaciones:</label>
                 <textarea id="observaciones" name="observaciones" maxlength="200"></textarea>
             </div>
+
             <div class="form-group">
                 <button type="submit" class="submit-btn">Enviar</button>
             </div>
@@ -106,3 +143,4 @@
     </script>
 </body>
 </html>
+
