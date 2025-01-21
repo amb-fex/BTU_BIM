@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario BTU-BIM</title>
+</head>
+<body>
+    <h1>Formulario para Datos BTU-BIM</h1>
+    <form id="data-form">
+        <label for="categoria">Categoría:</label>
+        <input type="text" id="categoria" name="categoria" maxlength="20" required><br><br>
+
+        <label for="elemento">Elemento u Objeto:</label>
+        <input type="text" id="elemento" name="elemento" maxlength="50" required><br><br>
+
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion" maxlength="200"></textarea><br><br>
+
+        <label for="tipo">Tipo:</label>
+        <input type="text" id="tipo" name="tipo" maxlength="5" required><br><br>
+
+        <label for="geometria">Geometría:</label>
+        <select id="geometria" name="geometria" required>
+            <option value="punto">Punto</option>
+            <option value="linea">Línea</option>
+            <option value="poligono">Polígono</option>
+        </select><br><br>
+
+        <label for="terreno">Terreno:</label>
+        <select id="terreno" name="terreno" multiple required>
+            <option value="terreno">Terreno</option>
+            <option value="sobresale">Sobresale</option>
+            <option value="sobre construccion">Sobre Construcción</option>
+            <option value="elevado">Elevado</option>
+            <option value="en tunel">En Túnel</option>
+            <option value="bajo tierra">Bajo Tierra</option>
+        </select><br><br>
+
+        <label for="captacion">Captación:</label>
+        <textarea id="captacion" name="captacion" maxlength="500"></textarea><br><br>
+
+        <label for="fotografias">Fotografías:</label>
+        <input type="file" id="fotografias" name="fotografias" accept="image/*" required><br><br>
+
+        <label for="observaciones">Observaciones:</label>
+        <textarea id="observaciones" name="observaciones" maxlength="200"></textarea><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // Manejar el envío del formulario
+        document.getElementById('data-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Capturar los datos del formulario
+            const categoria = document.getElementById('categoria').value;
+            const elemento = document.getElementById('elemento').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const tipo = document.getElementById('tipo').value;
+            const geometria = document.getElementById('geometria').value;
+            const terreno = Array.from(document.getElementById('terreno').selectedOptions).map(option => option.value);
+            const captacion = document.getElementById('captacion').value;
+            const fotografias = document.getElementById('fotografias').files[0];
+            const observaciones = document.getElementById('observaciones').value;
+
+            // Convertir la imagen a Base64
+            let fotografiasBase64 = null;
+            if (fotografias) {
+                fotografiasBase64 = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(fotografias);
+                });
+            }
+
+            // Preparar los datos para enviar
+            const formData = {
+                categoria,
+                elemento,
+                descripcion,
+                tipo,
+                geometria,
+                terreno,
+                captacion,
+                fotografias: fotografiasBase64,
+                observaciones,
+            };
+
+            // Enviar los datos al servidor Flask
+            try {
+                const response = await fetch("http://127.0.0.1:5000/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    alert("Datos enviados con éxito");
+                    document.getElementById('data-form').reset();
+                } else {
+                    const error = await response.json();
+                    alert("Error al enviar los datos: " + error.error);
+                }
+            } catch (error) {
+                alert("Error al conectar con el servidor: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
