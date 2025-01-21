@@ -96,12 +96,31 @@
                     </div>
                 </div>
 
+
+                <div class="form-group">
+                    <label for="captacion">Captación:</label>
+                    <textarea id="captacion" name="captacion" maxlength="500"></textarea>
+                </div>
+    
+                <!-- Campo de Fotografía -->
+                <div class="form-group">
+                    <label for="fotografias">Fotografías:</label>
+                    <input type="file" id="fotografias" name="fotografias" accept="image/*">
+                </div>
+    
+                <div class="form-group">
+                    <label for="observaciones">Observaciones:</label>
+                    <textarea id="observaciones" name="observaciones" maxlength="200"></textarea>
+                </div>
+    
                 <div class="form-group">
                     <button type="submit" class="submit-btn">Enviar</button>
                 </div>
             </form>
+            <div id="result-message" style="display: none;"></div>
         </div>
 
+    
         <!-- Barra Lateral -->
         <div class="sidebar">
             <h3>Información de Contexto</h3>
@@ -115,5 +134,42 @@
             </ul>
         </div>
     </div>
+    <script>
+        document.getElementById("data-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const jsonData = Object.fromEntries(formData.entries());
+            jsonData.terreno = formData.getAll("terreno"); // Capturar múltiples valores de terreno
+
+            try {
+                const response = await fetch("/submit", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(jsonData)
+                });
+
+                const result = await response.json();
+                const resultMessage = document.getElementById("result-message");
+
+                if (response.ok) {
+                    resultMessage.textContent = result.message;
+                    resultMessage.style.color = "green";
+                    resultMessage.style.display = "block";
+                    document.getElementById("data-form").reset(); // Reiniciar formulario
+                } else {
+                    resultMessage.textContent = `Error: ${result.error}`;
+                    resultMessage.style.color = "red";
+                    resultMessage.style.display = "block";
+                }
+            } catch (error) {
+                alert("Error de conexión: " + error.message);
+            }
+        });
+    </script>
 </body>
 </html>
+
+
