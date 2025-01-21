@@ -14,37 +14,46 @@ def home():
 # Ruta para manejar el envío del formulario
 @app.route("/submit", methods=["POST"])
 def submit_data():
-    data = request.json
     try:
+        # Obtener datos enviados desde el formulario
+        data = request.json
         categoria = data.get("categoria")
         elemento = data.get("elemento")
         descripcion = data.get("descripcion")
         tipo = data.get("tipo")
         geometria = data.get("geometria")
-        terreno = ','.join(data.get("terreno", []))  # Convierte lista a cadena
+        
+        # Convertir `terreno` a cadena si es una lista
+        terreno = data.get("terreno")
+        if isinstance(terreno, list):
+            terreno = ','.join(terreno)
+        else:
+            terreno = str(terreno) if terreno else None
+        
         captacion = data.get("captacion")
-        fotografias = data.get("fotografias")
+        fotografias = data.get("fotografias")  # Esto será Base64
         observaciones = data.get("observaciones")
-    except KeyError as e:
-        return jsonify({"error": f"Faltan datos requeridos: {e}"}), 400
 
-    try:
         # Conexión a la base de datos
         conn = psycopg2.connect(DATABASE_URL, sslmode="require")
         cur = conn.cursor()
+
+        # Insertar datos en la tabla
         cur.execute("""
             INSERT INTO datos_btu_bim 
             (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (categoria, elemento, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones))
+        
         conn.commit()
         cur.close()
         conn.close()
+
         return jsonify({"message": "Datos guardados con éxito"}), 200
     except Exception as e:
+        print(f"Error al guardar los datos: {e}")
         return jsonify({"error": f"Error al guardar los datos: {e}"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
-
 
