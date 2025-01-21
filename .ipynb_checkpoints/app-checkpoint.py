@@ -1,14 +1,19 @@
 import psycopg2
 from flask import Flask, request, jsonify, render_template
+import os
 
 app = Flask(__name__)
 
-# Configuración de PostgreSQL
-DB_HOST = "localhost"
-DB_NAME = "btu_bim"
-DB_USER = "postgres"
-DB_PASSWORD = "postgres"
-DB_PORT = "5432"
+# URL de conexión externo de Render
+DATABASE_URL = "postgresql://btu_bim_user:yOs3ITKc3EKTKbF3Yx0gaOypi5g5HvI4@dpg-cu72o123esus73ffd48g-a/btu_bim"
+
+
+# Conexión a la base de datos
+try:
+    conn = psycopg2.connect(DATABASE_URL, sslmode="require")
+    print("Conexión exitosa a la base de datos")
+except Exception as e:
+    print(f"Error al conectar a la base de datos: {e}")
 
 # Ruta principal para servir el formulario HTML
 @app.route("/", methods=["GET"])
@@ -31,14 +36,7 @@ def submit_data():
     observaciones = data.get("observaciones")
 
     try:
-        # Conectar a PostgreSQL
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            database=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            port=DB_PORT
-        )
+        # Usar la conexión global para insertar datos
         cur = conn.cursor()
 
         # Insertar datos en la tabla
@@ -50,11 +48,12 @@ def submit_data():
         conn.commit()
 
         cur.close()
-        conn.close()
         return jsonify({"message": "Datos guardados con éxito"}), 200
     except Exception as e:
+        print(f"Error al guardar los datos: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
+  
 
