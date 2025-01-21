@@ -1,8 +1,7 @@
-import psycopg2
 from flask import Flask, request, jsonify, render_template
+import psycopg2
 import os
-import base64
-import json  # Asegurarse de importar json
+import json
 
 app = Flask(__name__)
 
@@ -16,53 +15,61 @@ try:
 except Exception as e:
     print(f"Error al conectar a la base de datos: {e}")
 
+# Ruta para mantener la app activa (Keep-Alive)
+@app.route("/ping", methods=["GET"])
+def ping():
+    return "OK", 200
+
 # Ruta principal para servir el formulario HTML
 @app.route("/", methods=["GET"])
 def home():
-    return render_template("formulario.html")  # Sirve el formulario desde /templates
+    return render_template("formulario.html")
 
 # Ruta para manejar el envío del formulario
 @app.route("/submit", methods=["POST"])
 def submit_data():
     try:
-        # Intentar leer el JSON enviado en la solicitud
+        # Leer los datos del formulario
         data = request.get_json()
         if not data:
-            return jsonify({"error": "Solicitud sin datos o no es JSON válido"}), 400
+            return jsonify({"error": "Solicitud vacía o no válida"}), 400
 
-        # Validar campos requeridos
-        required_fields = ["categoria", "elemento", "descripcion", "tipo", "geometria", "terreno", "captacion", "fotografias", "observaciones"]
-        missing_fields = [field for field in required_fields if field not in data]
-        if missing_fields:
-            return jsonify({"error": f"Faltan campos obligatorios: {', '.join(missing_fields)}"}), 400
-
-        # Obtener datos
+        # Obtener datos del formulario
+        modo = data["modo"]
         categoria = data["categoria"]
         elemento = data["elemento"]
         descripcion = data["descripcion"]
         tipo = data["tipo"]
         geometria = data["geometria"]
-        terreno = data["terreno"]  # Mantenerlo como lista para TEXT[]
+        terreno = json.dumps(data.get("terreno", []))
         captacion = data["captacion"]
-        fotografias = base64.b64decode(data["fotografias"]) if data["fotografias"] else None  # Convertir Base64 a bytes
         observaciones = data["observaciones"]
 
-        # Convertir `terreno` a JSON (si es una lista)
-        terreno_json = json.dumps(terreno)
-
-        # Usar la conexión global para insertar datos
         cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO datos_btu_bim 
-            (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (categoria, elemento, descripcion, tipo, geometria, terreno_json, captacion, fotografias, observaciones))
-        conn.commit()
 
+        if modo == "actualizar":
+            # Lógica para actualizar un registro existente
+            cur.execute("""
+                UPDATE datos_btu_bim
+                SET categoria=%s, descripcion=%s, tipo=%s, geometria=%s, terreno=%s, captacion=%s, observaciones=%s
+                WHERE elemento_objeto=%s
+            """, (categoria, descripcion, tipo, geometria, terreno, captacion, observaciones, elemento))
+            mensaje = "Registro actualizado con éxito."
+        else:
+            # Lógica para agregar un nuevo registro
+            cur.execute("""
+                INSERT INTO datos_btu_bim 
+                (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, observaciones)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (categoria, elemento, descripcion, tipo, geometria, terreno, captacion, observaciones))
+            mensaje = "Nuevo registro agregado con éxito."
+
+        conn.commit()
         cur.close()
-        return jsonify({"message": "Datos guardados con éxito"}), 200
+
+        return jsonify({"message": mensaje}), 200
     except Exception as e:
-        print(f"Error al guardar los datos: {e}")
+        print(f"Error al procesar la solicitud: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":

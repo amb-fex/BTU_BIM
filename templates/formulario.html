@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario para Datos BTU-BIM</title>
+    <title>Formulario BTU-BIM</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Formulario para homogeneizar la Base Topográfica Urbana y su integración a BIM</h1>
+        <h1>Formulario BTU-BIM</h1>
         <form id="data-form">
+            <!-- Nueva pregunta: Modo -->
+            <div class="form-group">
+                <label for="modo">¿Qué desea hacer?</label>
+                <select id="modo" name="modo" required>
+                    <option value="agregar">Agregar nuevo elemento</option>
+                    <option value="actualizar">Actualizar elemento existente</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="categoria">Categoría:</label>
                 <input type="text" id="categoria" name="categoria" maxlength="20" required>
@@ -36,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label for="terreno">Terreno:</label>
-                <select id="terreno" name="terreno" multiple required>
+                <select id="terreno" name="terreno" multiple>
                     <option value="terreno">Terreno</option>
                     <option value="sobresale">Sobresale</option>
                     <option value="sobre construccion">Sobre Construcción</option>
@@ -50,10 +59,6 @@
                 <textarea id="captacion" name="captacion" maxlength="500"></textarea>
             </div>
             <div class="form-group">
-                <label for="fotografias">Fotografías:</label>
-                <input type="file" id="fotografias" name="fotografias" accept="image/*" required>
-            </div>
-            <div class="form-group">
                 <label for="observaciones">Observaciones:</label>
                 <textarea id="observaciones" name="observaciones" maxlength="200"></textarea>
             </div>
@@ -61,6 +66,7 @@
                 <button type="submit" class="submit-btn">Enviar</button>
             </div>
         </form>
+        <div id="result-message" style="display: none;"></div>
     </div>
 
     <script>
@@ -69,9 +75,7 @@
 
             const formData = new FormData(event.target);
             const jsonData = Object.fromEntries(formData.entries());
-            if (formData.getAll("terreno").length > 1) {
-                jsonData.terreno = formData.getAll("terreno");
-            }
+            jsonData.terreno = formData.getAll("terreno"); // Capturar múltiples valores de terreno
 
             try {
                 const response = await fetch("/submit", {
@@ -82,12 +86,18 @@
                     body: JSON.stringify(jsonData)
                 });
 
+                const result = await response.json();
+                const resultMessage = document.getElementById("result-message");
+
                 if (response.ok) {
-                    const result = await response.json();
-                    alert("Datos enviados con éxito: " + JSON.stringify(result));
+                    resultMessage.textContent = result.message;
+                    resultMessage.style.color = "green";
+                    resultMessage.style.display = "block";
+                    document.getElementById("data-form").reset(); // Reiniciar formulario
                 } else {
-                    const error = await response.json();
-                    alert("Error al enviar los datos: " + error.error);
+                    resultMessage.textContent = `Error: ${result.error}`;
+                    resultMessage.style.color = "red";
+                    resultMessage.style.display = "block";
                 }
             } catch (error) {
                 alert("Error de conexión: " + error.message);
