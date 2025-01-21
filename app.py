@@ -1,5 +1,7 @@
 import psycopg2
 from flask import Flask, request, jsonify, render_template
+import json
+import base64  # Para manejar datos en formato Base64
 
 app = Flask(__name__)
 
@@ -22,17 +24,23 @@ def submit_data():
         descripcion = data.get("descripcion")
         tipo = data.get("tipo")
         geometria = data.get("geometria")
-        
-        # Convertir `terreno` a cadena si es una lista
+
+        # Convertir `terreno` a cadena JSON si es una lista
         terreno = data.get("terreno")
         if isinstance(terreno, list):
-            terreno = ','.join(terreno)
-        else:
-            terreno = str(terreno) if terreno else None
-        
+            terreno = json.dumps(terreno)  # Convertir lista a JSON string
+
+        # Convertir `fotografias` a binario (BYTEA) si viene en Base64
+        fotografias = data.get("fotografias")
+        if isinstance(fotografias, str):  # Si es una cadena Base64
+            fotografias = base64.b64decode(fotografias)
+
+        # Convertir observaciones a cadena (si no es cadena)
+        observaciones = data.get("observaciones", "")
+        if not isinstance(observaciones, str):
+            observaciones = str(observaciones)
+
         captacion = data.get("captacion")
-        fotografias = data.get("fotografias")  # Esto será Base64
-        observaciones = data.get("observaciones")
 
         # Conexión a la base de datos
         conn = psycopg2.connect(DATABASE_URL, sslmode="require")
@@ -44,7 +52,7 @@ def submit_data():
             (categoria, elemento_objeto, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (categoria, elemento, descripcion, tipo, geometria, terreno, captacion, fotografias, observaciones))
-        
+
         conn.commit()
         cur.close()
         conn.close()
@@ -56,4 +64,3 @@ def submit_data():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
