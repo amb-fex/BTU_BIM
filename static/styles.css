@@ -1,27 +1,45 @@
 /* Fondo general del cuerpo */
-/* Fondo general del cuerpo */
 body {
     font-family: Arial, sans-serif;
-    margin: 20vh;
+    margin: 0;
     padding: 0;
     background: url('/static/images/carto_image.png') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
 }
 
+/* Banner Superior */
+.banner {
+    background-color: #ffcf00; /* Color del banner */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center; /* Centrar verticalmente los elementos */
+    justify-content: flex-start; /* Alinear los elementos a la izquierda */
+    position: relative; /* Asegurarse de que se quede en su posición */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para realce */
+}
+
+.banner img {
+    height: 40px; /* Tamaño ajustado del logotipo */
+    margin-right: 15px; /* Espacio entre el logotipo y el texto */
+}
+
+.banner span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+}
 
 /* Contenedor principal del formulario y la barra lateral */
-
 .container {
     display: flex;
     flex-direction: row;
     justify-content: flex-start; /* Alinear elementos hacia la izquierda */
     align-items: flex-start; /* Mantener los elementos alineados en la parte superior */
-    margin: 20px auto;
+    margin: 40px auto; /* Margen superior sugerido */
     max-width: 1200px;
     padding: 20px;
 }
-
 
 /* Formulario alineado a la izquierda */
 .form-container {
@@ -30,12 +48,11 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-left: 0; /* Sin margen hacia la izquierda */
-    margin-right: 20px; /* Separación de la barra lateral */
+    margin-left: 60px; /* Sin margen hacia la izquierda */
+    margin-right: 60px; /* Separación de la barra lateral */
     max-width: 600px; /* Reducir el ancho del formulario */
     width: 100%; /* Que se adapte al espacio disponible */
 }
-
 
 /* Barra lateral */
 .sidebar {
@@ -48,7 +65,6 @@ body {
     overflow-y: auto;
     margin-left: 20px; /* Separación desde el formulario */
 }
-
 
 /* Títulos de la barra lateral */
 .sidebar h3 {
@@ -88,6 +104,15 @@ body {
 
 .submit-btn:hover {
     background: linear-gradient(45deg, #0056b3, #007bff);
+}
+
+/* Mensaje de resultado */
+#result-message {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
 }
 
 /* Responsividad */
