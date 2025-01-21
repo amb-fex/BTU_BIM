@@ -4,147 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario BTU-BIM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Formulario BTU-BIM</h1>
-        <form id="data-form">
-            <!-- Pregunta: Modo -->
-            <div class="form-group">
-                <label for="modo">¿Qué desea hacer?</label>
-                <select id="modo" name="modo" required>
-                    <option value="agregar">Agregar nuevo elemento</option>
-                    <option value="actualizar">Actualizar elemento existente</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="categoria">Categoría:</label>
-                <select id="categoria" name="categoria" required>
-                    <option value="Mapa Base">Mapa Base</option>
-                    <option value="Curvas de Nivel">Curvas de Nivel</option>
-                    <option value="Límites Administrativos">Límites Administrativos</option>
-                    <option value="Red Hidrográfica">Red Hidrográfica</option>
-                    <option value="Red Vial">Red Vial</option>
-                    <option value="Edificaciones">Edificaciones</option>
-                    <option value="Uso del Suelo">Uso del Suelo</option>
-                    <option value="Cobertura Vegetal">Cobertura Vegetal</option>
-                    <option value="Infraestructura de Servicios">Infraestructura de Servicios</option>
-                    <option value="Puntos de Interés">Puntos de Interés</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="elemento">Elemento u Objeto:</label>
-                <input type="text" id="elemento" name="elemento" maxlength="50" required>
-            </div>
-
-            <div class="form-group">
-                <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" maxlength="200"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="tipo">Tipo:</label>
-                <input type="text" id="tipo" name="tipo" maxlength="5" required>
-            </div>
-
-            <div class="form-group">
-                <label for="geometria">Geometría:</label>
-                <select id="geometria" name="geometria" required>
-                    <option value="punto">Punto</option>
-                    <option value="línea">Línea</option>
-                    <option value="polígono">Polígono</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="terreno">Terreno (seleccione todas las que correspondan):</label>
-                <div>
-                    <input type="checkbox" id="terreno1" name="terreno" value="Terreno">
-                    <label for="terreno1">Terreno</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terreno2" name="terreno" value="Sobresale">
-                    <label for="terreno2">Sobresale</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terreno3" name="terreno" value="Sobre Construcción">
-                    <label for="terreno3">Sobre Construcción</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terreno4" name="terreno" value="Elevado">
-                    <label for="terreno4">Elevado</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terreno5" name="terreno" value="En Túnel">
-                    <label for="terreno5">En Túnel</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="terreno6" name="terreno" value="Bajo Tierra">
-                    <label for="terreno6">Bajo Tierra</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="captacion">Captación:</label>
-                <textarea id="captacion" name="captacion" maxlength="500"></textarea>
-            </div>
-
-            <!-- Campo de Fotografía -->
-            <div class="form-group">
-                <label for="fotografias">Fotografías:</label>
-                <input type="file" id="fotografias" name="fotografias" accept="image/*">
-            </div>
-
-            <div class="form-group">
-                <label for="observaciones">Observaciones:</label>
-                <textarea id="observaciones" name="observaciones" maxlength="200"></textarea>
-            </div>
-
-            <div class="form-group">
-                <button type="submit" class="submit-btn">Enviar</button>
-            </div>
-        </form>
-        <div id="result-message" style="display: none;"></div>
+    <!-- Banner Superior -->
+    <div class="banner">
+        <img src="/static/images/Logotipo.png" alt="Logotipo">
+        <span>Formulario BTU-BIM: Integración GIS y BIM</span>
     </div>
 
-    <script>
-        document.getElementById("data-form").addEventListener("submit", async function (event) {
-            event.preventDefault();
+    <!-- Contenedor Principal -->
+    <div class="container">
+        <!-- Formulario -->
+        <div class="form-container">
+            <h1>Formulario BTU-BIM</h1>
+            <form id="data-form">
+                <div class="form-group">
+                    <label for="modo"><i class="fas fa-cogs"></i> ¿Qué desea hacer?</label>
+                    <select id="modo" name="modo" required>
+                        <option value="agregar">Agregar nuevo elemento</option>
+                        <option value="actualizar">Actualizar elemento existente</option>
+                    </select>
+                </div>
 
-            const formData = new FormData(event.target);
-            const jsonData = Object.fromEntries(formData.entries());
-            jsonData.terreno = formData.getAll("terreno"); // Capturar múltiples valores de terreno
+                <div class="form-group">
+                    <label for="categoria"><i class="fas fa-map"></i> Categoría:</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="Mapa Base">Mapa Base</option>
+                        <option value="Curvas de Nivel">Curvas de Nivel</option>
+                        <option value="Límites Administrativos">Límites Administrativos</option>
+                        <option value="Red Hidrográfica">Red Hidrográfica</option>
+                        <option value="Red Vial">Red Vial</option>
+                        <option value="Edificaciones">Edificaciones</option>
+                        <option value="Uso del Suelo">Uso del Suelo</option>
+                        <option value="Cobertura Vegetal">Cobertura Vegetal</option>
+                        <option value="Infraestructura de Servicios">Infraestructura de Servicios</option>
+                        <option value="Puntos de Interés">Puntos de Interés</option>
+                    </select>
+                </div>
 
-            try {
-                const response = await fetch("/submit", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(jsonData)
-                });
+                <div class="form-group">
+                    <label for="elemento"><i class="fas fa-object-ungroup"></i> Elemento u Objeto:</label>
+                    <input type="text" id="elemento" name="elemento" maxlength="50" required>
+                </div>
 
-                const result = await response.json();
-                const resultMessage = document.getElementById("result-message");
+                <div class="form-group">
+                    <label for="descripcion"><i class="fas fa-align-left"></i> Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" maxlength="200"></textarea>
+                </div>
 
-                if (response.ok) {
-                    resultMessage.textContent = result.message;
-                    resultMessage.style.color = "green";
-                    resultMessage.style.display = "block";
-                    document.getElementById("data-form").reset(); // Reiniciar formulario
-                } else {
-                    resultMessage.textContent = `Error: ${result.error}`;
-                    resultMessage.style.color = "red";
-                    resultMessage.style.display = "block";
-                }
-            } catch (error) {
-                alert("Error de conexión: " + error.message);
-            }
-        });
-    </script>
+                <div class="form-group">
+                    <label for="tipo"><i class="fas fa-tags"></i> Tipo:</label>
+                    <input type="text" id="tipo" name="tipo" maxlength="5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="geometria"><i class="fas fa-draw-polygon"></i> Geometría:</label>
+                    <select id="geometria" name="geometria" required>
+                        <option value="punto">Punto</option>
+                        <option value="línea">Línea</option>
+                        <option value="polígono">Polígono</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-mountain"></i> Terreno (seleccione todas las que correspondan):</label>
+                    <div>
+                        <input type="checkbox" id="terreno1" name="terreno" value="Terreno">
+                        <label for="terreno1">Terreno</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="terreno2" name="terreno" value="Sobresale">
+                        <label for="terreno2">Sobresale</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="terreno3" name="terreno" value="Sobre Construcción">
+                        <label for="terreno3">Sobre Construcción</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="terreno4" name="terreno" value="Elevado">
+                        <label for="terreno4">Elevado</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="terreno5" name="terreno" value="En Túnel">
+                        <label for="terreno5">En Túnel</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="terreno6" name="terreno" value="Bajo Tierra">
+                        <label for="terreno6">Bajo Tierra</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="submit-btn">Enviar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Barra Lateral -->
+        <div class="sidebar">
+            <h3>Información de Contexto</h3>
+            <p>Este formulario tiene como objetivo homogeneizar la Base Topográfica Urbana (BTU) para su integración en modelos BIM.</p>
+
+            <h3>Tips y Validaciones</h3>
+            <ul>
+                <li>Seleccione si desea agregar o actualizar un elemento.</li>
+                <li>Complete todos los campos obligatorios marcados con (*).</li>
+                <li>Adjunte información precisa y relevante.</li>
+            </ul>
+        </div>
+    </div>
 </body>
 </html>
-
