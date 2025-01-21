@@ -1,38 +1,41 @@
 /* Fondo general del cuerpo */
+/* Fondo general del cuerpo */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
+    margin: 20vh;
     padding: 0;
     background: url('/static/images/carto_image.png') no-repeat center center fixed;
     background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
 }
 
+
 /* Contenedor principal del formulario y la barra lateral */
+
 .container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: flex-start; /* Alinear elementos hacia la izquierda */
+    align-items: flex-start; /* Mantener los elementos alineados en la parte superior */
     margin: 20px auto;
     max-width: 1200px;
     padding: 20px;
 }
 
-/* Formulario centrado con margen */
+
+/* Formulario alineado a la izquierda */
 .form-container {
     flex: 2;
     background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-right: 20px; /* Margen hacia la barra lateral */
+    margin-left: 0; /* Sin margen hacia la izquierda */
+    margin-right: 20px; /* Separación de la barra lateral */
     max-width: 600px; /* Reducir el ancho del formulario */
     width: 100%; /* Que se adapte al espacio disponible */
 }
+
 
 /* Barra lateral */
 .sidebar {
@@ -41,9 +44,11 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 300px;
+    max-width: 300px; /* Ajustar ancho máximo */
     overflow-y: auto;
+    margin-left: 20px; /* Separación desde el formulario */
 }
+
 
 /* Títulos de la barra lateral */
 .sidebar h3 {
