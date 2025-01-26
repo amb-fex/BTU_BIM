@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('/static/images/carto_image.png') no-repeat center center fixed;
+    background: url('/static/images/Models_BIM_IFC.png') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
 }
